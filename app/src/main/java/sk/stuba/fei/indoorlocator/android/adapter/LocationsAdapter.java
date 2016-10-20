@@ -30,6 +30,15 @@ public class LocationsAdapter extends BaseAdapter {
         this.locationList = locationList;
     }
 
+    public void clear(){
+        locationList.clear();
+    }
+
+    public void addAll(List<Location> locs){
+        locationList.clear();
+        locationList.addAll(locs);
+    }
+
     @Override
     public int getCount() {
         return locationList.size();
@@ -60,4 +69,6 @@ public class LocationsAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+
 }

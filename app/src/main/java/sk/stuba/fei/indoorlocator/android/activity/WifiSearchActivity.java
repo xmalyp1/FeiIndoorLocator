@@ -61,7 +61,6 @@ public class WifiSearchActivity extends Activity {
         selectedLocation = (Location)getIntent().getSerializableExtra("LOCATION");
         databaseManager = new DatabaseManager(new DatabaseHelper(getApplicationContext()));
         databaseManager.open();
-        //new LocationDAO(databaseHelper).populateLocation();
 
         saveFormLayout = (RelativeLayout) this.findViewById(R.id.save_layout_container);
         saveFormLayout.setVisibility(View.INVISIBLE);
@@ -124,6 +123,9 @@ public class WifiSearchActivity extends Activity {
         });
         if(selectedLocation == null)
             save.setClickable(false);
+        else{
+            scanBtn.setText("Scan for location "+ selectedLocation.getBlock()+"-"+selectedLocation.getFloor());
+        }
     }
 
     @Override
