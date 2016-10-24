@@ -11,7 +11,6 @@ public class FeiIndoorLocator {
     private FloorLocator floorLocator;
     private BlockLocator blockLocator;
 
-
     public FeiIndoorLocator(FloorLocator floorLocator){
         this.blockLocator = new BlockLocator();
         this.floorLocator = floorLocator;

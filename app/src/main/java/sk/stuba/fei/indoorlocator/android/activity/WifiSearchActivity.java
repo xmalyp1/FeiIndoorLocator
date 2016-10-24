@@ -40,8 +40,6 @@ import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
 public class WifiSearchActivity extends Activity {
 
     private static final int SCAN_PROCESS_SECONDS = 30;
-    private static final String[] BLOCKS= {"A","B","C","D","E"};
-    private static final String[] FLOORS= {"-1","0","1","2","3","4","5","6"};
 
     private WifiManager wifi;
     private List<ScanResult> wifiResults;
@@ -113,7 +111,8 @@ public class WifiSearchActivity extends Activity {
                 try {
                     saveMeasurement();
                     Toast.makeText(getApplicationContext(), "Measurement was saved sucessfully!", Toast.LENGTH_LONG).show();
-
+                    Intent i = new Intent(WifiSearchActivity.this,FeiLocatorMainActivity.class);
+                    WifiSearchActivity.this.startActivity(i);
                 } catch (DatabaseException e) {
                     Toast.makeText(getApplicationContext(), "Unable to save the measurement!", Toast.LENGTH_LONG).show();
                     Log.i("FEI","Unable to save measurement");
@@ -133,7 +132,7 @@ public class WifiSearchActivity extends Activity {
         try {
             unregisterReceiver(wifiBroadcastReceiver);
         }catch(IllegalArgumentException e){}
-
+        wifiScanResultAdapter.clear();
         databaseManager.close();
         super.onPause();
     }
@@ -154,7 +153,7 @@ public class WifiSearchActivity extends Activity {
         WifiDAO wifiDAO = new WifiDAO(databaseManager);
         MeasurementDAO measurementDAO = new MeasurementDAO(databaseManager);
 
-        for(ScanResult result : wifiResults){
+        for(ScanResult result : wifiScanResultAdapter.getSelectedScanResults()){
             Wifi wifi = wifiDAO.findWifiByMac(result.BSSID);
             if(wifi == null){
                 wifi = new Wifi(result.SSID,result.BSSID);

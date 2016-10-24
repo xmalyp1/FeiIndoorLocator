@@ -3,34 +3,45 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wifiCheckBox"
+        android:layout_weight="0.19"
+        android:checked="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ssid"
-        android:layout_weight="0.23"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:layout_weight="0.19"
+        android:textColor="@color/colorPrimaryDark"
+        android:labelFor="@+id/wifiCheckBox" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mac_adr"
-        android:layout_weight="0.23"
+        android:layout_weight="0.30"
         android:textColor="@color/colorPrimaryDark"
+        android:gravity="right"
          />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/frequency"
-        android:layout_weight="0.23"
+        android:layout_weight="0.11"
         android:textColor="@color/colorPrimaryDark"
+        android:gravity="right"
          />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/level"
-        android:layout_weight="0.23"
+        android:gravity="right"
+        android:layout_weight="0.11"
         android:textColor="@color/colorPrimaryDark"
         />
 </LinearLayout>
