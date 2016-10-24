@@ -3,6 +3,7 @@ package sk.stuba.fei.indoorlocator.android.activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +13,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
+import sk.stuba.fei.indoorlocator.Helper.FileManager;
 import sk.stuba.fei.indoorlocator.R;
 import sk.stuba.fei.indoorlocator.android.adapter.LocationsAdapter;
 import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
@@ -92,6 +101,27 @@ public class LocationsActivity extends ListActivity {
         });
 
         dialog.show();
+    }
+
+    public void exportDB(View view) {
+        String dbName = dbManager.getDatabaseHelper().getDatabaseName();
+        File dbFile = getApplicationContext().getDatabasePath(dbName);
+
+        File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ExportedDB.db");
+
+        try {
+            InputStream in = new FileInputStream(dbFile);
+            OutputStream out = new FileOutputStream(outputFile);
+
+            FileManager.copyFile(in, out);
+
+            in.close();
+            out.close();
+
+            Toast.makeText(LocationsActivity.this,"DB was successfully exported", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
