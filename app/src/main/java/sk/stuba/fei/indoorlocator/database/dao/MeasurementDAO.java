@@ -49,8 +49,21 @@ public class MeasurementDAO extends  AbstractDAO<Measurement> {
         return result;
     }
 
+    @Override
+    public Long exists(ContentValues contentValues) {
+        //ToDo
+        return null;
+    }
+
     public List<Measurement> findMeasurementsForWifi(Wifi wifi){
         Cursor cursor = getDatabase().query(getDatabaseHelper().MEASUREMENT_TABLE,null,Measurement.Field.WIFI_ID+"=?",new String[]{wifi.getId().toString()},null,null,null);
+        List<Measurement> result = getEntityFromCursor(cursor);
+        cursor.close();
+        return result;
+    }
+
+    public List<Measurement> getAllMeasurements() {
+        Cursor cursor = getDatabase().query(getDatabaseHelper().MEASUREMENT_TABLE,null,null,null,null,null,null);
         List<Measurement> result = getEntityFromCursor(cursor);
         cursor.close();
         return result;

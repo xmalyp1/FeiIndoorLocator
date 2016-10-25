@@ -4,6 +4,27 @@ import android.app.Activity;
 import android.app.Application;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
+import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.List;
+
+import sk.stuba.fei.indoorlocator.Helper.FileManager;
+import sk.stuba.fei.indoorlocator.android.activity.LocationsActivity;
+import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
 
 /**
  * Created by Patrik on 14.10.2016.
@@ -33,4 +54,33 @@ public class DatabaseManager {
         databaseHelper.close();
     }
 
+    public void exportDB() throws DatabaseException, IOException {
+        if(database == null) {
+            open();
+        } else {
+            List<String> records = DatabaseUtils.getCSVRecords(this);
+            File outFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ExportDB-" + System.currentTimeMillis() +".csv");
+
+            OutputStreamWriter fileOutputStream = new OutputStreamWriter(new FileOutputStream(outFile));
+
+            for(String record : records) {
+                fileOutputStream.write(record);
+            }
+
+            fileOutputStream.close();
+        }
+    }
+
+    public void ImportDB(File csvFile) throws IOException {
+        if(database == null) {
+            open();
+        } else {
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+
+            String line;
+            while((line = br.readLine()) != null) {
+                DatabaseUtils.processCSVLine(this, line);
+            }
+        }
+    }
 }

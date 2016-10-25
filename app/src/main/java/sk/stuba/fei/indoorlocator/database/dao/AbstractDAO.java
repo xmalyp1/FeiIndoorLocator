@@ -1,5 +1,6 @@
 package sk.stuba.fei.indoorlocator.database.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -34,6 +35,8 @@ public abstract class AbstractDAO<T extends AbstractEntity> {
     }
 
     public abstract Long createEntity(T t);
+
+    public abstract Long exists(ContentValues contentValues);
 
     public abstract List<T> getEntityFromCursor(Cursor cursor);
 }

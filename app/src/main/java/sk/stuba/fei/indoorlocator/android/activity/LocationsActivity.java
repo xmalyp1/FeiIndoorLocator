@@ -3,6 +3,7 @@ package sk.stuba.fei.indoorlocator.android.activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,8 +30,11 @@ import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
 import sk.stuba.fei.indoorlocator.database.DatabaseManager;
 import sk.stuba.fei.indoorlocator.database.dao.LocationDAO;
 import sk.stuba.fei.indoorlocator.database.entities.Location;
+import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
 
 public class LocationsActivity extends ListActivity {
+
+    private static final int FILE_CHOOSER = 3333;
 
     private DatabaseManager dbManager;
     private LocationDAO locationDAO;
@@ -105,23 +109,42 @@ public class LocationsActivity extends ListActivity {
 
     public void exportDB(View view) {
         String dbName = dbManager.getDatabaseHelper().getDatabaseName();
-        File dbFile = getApplicationContext().getDatabasePath(dbName);
-
-        File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ExportedDB.db");
 
         try {
-            InputStream in = new FileInputStream(dbFile);
-            OutputStream out = new FileOutputStream(outputFile);
+            dbManager.exportDB();
 
-            FileManager.copyFile(in, out);
-
-            in.close();
-            out.close();
-
-            Toast.makeText(LocationsActivity.this,"DB was successfully exported", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
+            Toast.makeText(LocationsActivity.this,"Database was successfully exported.", Toast.LENGTH_SHORT).show();
+        } catch (DatabaseException | IOException e) {
             e.printStackTrace();
+
+            Toast.makeText(LocationsActivity.this,"Database was not successfully exported.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
+    public void importDB(View view) {
+
+        Intent intent = new Intent()
+        .setType("text/csv")
+        .setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(intent, "Select a csv file"), FILE_CHOOSER);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == FILE_CHOOSER && resultCode == RESULT_OK) {
+            Uri selectedfileUri = data.getData();
+            File selectedFile = new File(selectedfileUri.getPath());
+            try {
+                dbManager.ImportDB(selectedFile);
+                Toast.makeText(LocationsActivity.this,"Database was successfully imported.", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(LocationsActivity.this,"Database was not successfully imported.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
