@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +35,6 @@ import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
 
 public class LocationsActivity extends ListActivity {
 
-    private static final int FILE_CHOOSER = 3333;
 
     private DatabaseManager dbManager;
     private LocationDAO locationDAO;
@@ -107,44 +107,4 @@ public class LocationsActivity extends ListActivity {
         dialog.show();
     }
 
-    public void exportDB(View view) {
-        String dbName = dbManager.getDatabaseHelper().getDatabaseName();
-
-        try {
-            dbManager.exportDB();
-
-            Toast.makeText(LocationsActivity.this,"Database was successfully exported.", Toast.LENGTH_SHORT).show();
-        } catch (DatabaseException | IOException e) {
-            e.printStackTrace();
-
-            Toast.makeText(LocationsActivity.this,"Database was not successfully exported.", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    public void importDB(View view) {
-
-        Intent intent = new Intent()
-        .setType("text/csv")
-        .setAction(Intent.ACTION_GET_CONTENT);
-
-        startActivityForResult(Intent.createChooser(intent, "Select a csv file"), FILE_CHOOSER);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == FILE_CHOOSER && resultCode == RESULT_OK) {
-            Uri selectedfileUri = data.getData();
-            File selectedFile = new File(selectedfileUri.getPath());
-            try {
-                dbManager.ImportDB(selectedFile);
-                Toast.makeText(LocationsActivity.this,"Database was successfully imported.", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(LocationsActivity.this,"Database was not successfully imported.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }
