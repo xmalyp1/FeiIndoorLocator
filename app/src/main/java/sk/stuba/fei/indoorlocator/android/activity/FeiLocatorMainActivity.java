@@ -89,7 +89,7 @@ public class FeiLocatorMainActivity extends Activity {
     public void importDB() {
 
         Intent intent = new Intent()
-                .setType("text/csv")
+                .setType("text/comma-separated-values")
                 .setAction(Intent.ACTION_GET_CONTENT);
 
         startActivityForResult(Intent.createChooser(intent, "Select a csv file"), FILE_CHOOSER);
