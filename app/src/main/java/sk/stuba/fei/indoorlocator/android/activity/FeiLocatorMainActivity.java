@@ -46,7 +46,8 @@ public class FeiLocatorMainActivity extends Activity {
         whereAmI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"The functionality is not implemented!",Toast.LENGTH_LONG).show();
+                Intent myIntent = new Intent(FeiLocatorMainActivity.this, DetectionActivity.class);
+                FeiLocatorMainActivity.this.startActivity(myIntent);
             }
         });
     }
