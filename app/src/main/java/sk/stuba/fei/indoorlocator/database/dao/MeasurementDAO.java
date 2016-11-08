@@ -9,6 +9,7 @@ import java.util.List;
 
 import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
 import sk.stuba.fei.indoorlocator.database.DatabaseManager;
+import sk.stuba.fei.indoorlocator.database.entities.Location;
 import sk.stuba.fei.indoorlocator.database.entities.Measurement;
 import sk.stuba.fei.indoorlocator.database.entities.Wifi;
 
@@ -57,6 +58,13 @@ public class MeasurementDAO extends  AbstractDAO<Measurement> {
 
     public List<Measurement> findMeasurementsForWifi(Wifi wifi){
         Cursor cursor = getDatabase().query(getDatabaseHelper().MEASUREMENT_TABLE,null,Measurement.Field.WIFI_ID+"=?",new String[]{wifi.getId().toString()},null,null,null);
+        List<Measurement> result = getEntityFromCursor(cursor);
+        cursor.close();
+        return result;
+    }
+
+    public List<Measurement> findMeasurementsForLocation(Location loc){
+        Cursor cursor = getDatabase().query(getDatabaseHelper().MEASUREMENT_TABLE,null,Measurement.Field.BLOCK_ID+"=?",new String[]{loc.getId().toString()},null,null,null);
         List<Measurement> result = getEntityFromCursor(cursor);
         cursor.close();
         return result;

@@ -61,4 +61,26 @@ public class Wifi extends AbstractEntity{
         this.onBlock = onBlock;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Wifi wifi = (Wifi) o;
+
+        if (id != null ? !id.equals(wifi.id) : wifi.id != null) return false;
+        if (ssid != null ? !ssid.equals(wifi.ssid) : wifi.ssid != null) return false;
+        if (mac != null ? !mac.equals(wifi.mac) : wifi.mac != null) return false;
+        return onBlock != null ? onBlock.equals(wifi.onBlock) : wifi.onBlock == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (ssid != null ? ssid.hashCode() : 0);
+        result = 31 * result + (mac != null ? mac.hashCode() : 0);
+        result = 31 * result + (onBlock != null ? onBlock.hashCode() : 0);
+        return result;
+    }
 }

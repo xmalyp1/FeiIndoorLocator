@@ -90,4 +90,5 @@ public class WifiDAO extends  AbstractDAO<Wifi>{
         cursor.close();
         return result.isEmpty() ? null : result.get(0);
     }
+
 }

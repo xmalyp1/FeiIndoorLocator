@@ -3,35 +3,21 @@ package sk.stuba.fei.indoorlocator.android.activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
-import sk.stuba.fei.indoorlocator.Helper.FileManager;
 import sk.stuba.fei.indoorlocator.R;
 import sk.stuba.fei.indoorlocator.android.adapter.LocationsAdapter;
 import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
 import sk.stuba.fei.indoorlocator.database.DatabaseManager;
 import sk.stuba.fei.indoorlocator.database.dao.LocationDAO;
 import sk.stuba.fei.indoorlocator.database.entities.Location;
-import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
 
 public class LocationsActivity extends ListActivity {
 

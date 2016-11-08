@@ -1,4 +1,4 @@
-package sk.stuba.fei.indoorlocator.Helper;
+package sk.stuba.fei.indoorlocator.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -28,6 +28,7 @@ public class DetectionActivity extends Activity {
     private ProgressDialog progDialog;
     private FeiIndoorLocator feiLocator;
     private TextView locationText;
+    private DatabaseManager databaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class DetectionActivity extends Activity {
         setContentView(R.layout.activity_detection);
         locationText = (TextView)findViewById(R.id.locationText);
         locationText.setText("?");
+        databaseManager = new DatabaseManager(new DatabaseHelper(getApplicationContext()));
+        databaseManager.open();
         wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         feiLocatorReceiver = new FeiLocatorReceiver();
 
@@ -56,6 +59,7 @@ public class DetectionActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        databaseManager.open();
         registerReceiver(feiLocatorReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
        // progDialog.show();
@@ -65,6 +69,7 @@ public class DetectionActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        databaseManager.close();
         try {
             unregisterReceiver(feiLocatorReceiver);
         }catch(IllegalArgumentException e){}
@@ -93,7 +98,7 @@ public class DetectionActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
 
             try {
-                Location location = feiLocator.getActualLocation(wifi.getScanResults(),new DatabaseManager(new DatabaseHelper(DetectionActivity.this)));
+                Location location = feiLocator.getActualLocation(wifi.getScanResults(),databaseManager);
                 locationText.setText(formatLocationForUI(location));
             } catch (DatabaseException e) {
                 locationText.setText(formatLocationForUI(null));

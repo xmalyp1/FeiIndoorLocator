@@ -23,7 +23,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import sk.stuba.fei.indoorlocator.R;
 import sk.stuba.fei.indoorlocator.android.adapter.WifiScanResultAdapter;
@@ -36,6 +38,8 @@ import sk.stuba.fei.indoorlocator.database.entities.Location;
 import sk.stuba.fei.indoorlocator.database.entities.Measurement;
 import sk.stuba.fei.indoorlocator.database.entities.Wifi;
 import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
+import sk.stuba.fei.indoorlocator.utils.ScanDataDTO;
+import sk.stuba.fei.indoorlocator.utils.ScanResultMapper;
 
 public class WifiSearchActivity extends Activity {
 
@@ -59,7 +63,6 @@ public class WifiSearchActivity extends Activity {
         selectedLocation = (Location)getIntent().getSerializableExtra("LOCATION");
         databaseManager = new DatabaseManager(new DatabaseHelper(getApplicationContext()));
         databaseManager.open();
-
         saveFormLayout = (RelativeLayout) this.findViewById(R.id.save_layout_container);
         saveFormLayout.setVisibility(View.INVISIBLE);
         wifiResults = new ArrayList<ScanResult>();
@@ -87,8 +90,13 @@ public class WifiSearchActivity extends Activity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
-                        wifiScanResultAdapter = new WifiScanResultAdapter(getApplicationContext() ,R.layout.wifi_scan_row,R.id.wifi_list,wifiResults);
+                        List<ScanDataDTO> data = null;
+                        try {
+                            data = getDataToDisplay(ScanResultMapper.mapScanResults(wifiResults),getBSIDOnLocation(selectedLocation));
+                        } catch (DatabaseException e) {
+                            data = ScanResultMapper.mapScanResults(wifiResults);
+                        }
+                        wifiScanResultAdapter = new WifiScanResultAdapter(getApplicationContext() ,R.layout.wifi_scan_row,R.id.wifi_list, data,getBSIDOnLocation(selectedLocation));
                         scanResultListView = (ListView)findViewById(R.id.wifi_list);
                         scanResultListView.setAdapter(wifiScanResultAdapter);
                         unregisterReceiver(wifiBroadcastReceiver);
@@ -123,7 +131,7 @@ public class WifiSearchActivity extends Activity {
         if(selectedLocation == null)
             save.setClickable(false);
         else{
-            scanBtn.setText("Scan for location "+ selectedLocation.getBlock()+"-"+selectedLocation.getFloor());
+            scanBtn.setText("Scan for location "+ selectedLocation.getBlock()+" "+selectedLocation.getFloor());
         }
     }
 
@@ -132,7 +140,8 @@ public class WifiSearchActivity extends Activity {
         try {
             unregisterReceiver(wifiBroadcastReceiver);
         }catch(IllegalArgumentException e){}
-        wifiScanResultAdapter.clear();
+        if(wifiScanResultAdapter != null)
+            wifiScanResultAdapter.clear();
         databaseManager.close();
         super.onPause();
     }
@@ -153,19 +162,56 @@ public class WifiSearchActivity extends Activity {
         WifiDAO wifiDAO = new WifiDAO(databaseManager);
         MeasurementDAO measurementDAO = new MeasurementDAO(databaseManager);
 
-        for(ScanResult result : wifiScanResultAdapter.getSelectedScanResults()){
-            Wifi wifi = wifiDAO.findWifiByMac(result.BSSID);
+        for(ScanDataDTO result : wifiScanResultAdapter.getSelectedScanResults()){
+            Wifi wifi = wifiDAO.findWifiByMac(result.getMac());
             if(wifi == null){
-                wifi = new Wifi(result.SSID,result.BSSID);
-                Long l = wifiDAO.createEntity(new Wifi(result.SSID,result.BSSID));
+                wifi = new Wifi(result.getName(),result.getMac());
+                Long l = wifiDAO.createEntity(new Wifi(result.getName(),result.getMac()));
                 wifi.setId(l);
             }
-            measurementDAO.createEntity(new Measurement(result.level,selectedLocation.getId(),wifi.getId()));
+            measurementDAO.createEntity(new Measurement(result.getLevel(),selectedLocation.getId(),wifi.getId()));
+            Log.i("FEI_SAVE","Saving data: "+result.toString());
         }
 
         locationDAO.updateLastScanForLocation(selectedLocation);
     }
 
+    private Set<String> getBSIDOnLocation(Location loc){
+        MeasurementDAO measurementDAO = new MeasurementDAO(databaseManager);
+        WifiDAO wifiDAO = new WifiDAO(databaseManager);
+        List<Measurement> measurementOnLocation = measurementDAO.findMeasurementsForLocation(loc);
+        Set<String> wifiOnLocation = new HashSet<String>();
+        for(Measurement mes : measurementOnLocation){
+            try {
+                Wifi w =wifiDAO.findWifiByID(mes.getWifiId());
+                if(w != null)
+                    wifiOnLocation.add(w.getMac());
+            } catch (DatabaseException e) {
+            }
+        }
+        return wifiOnLocation;
+    }
+
+    private List<ScanDataDTO> getDataToDisplay(List<ScanDataDTO> availableData,Set<String> bssids) throws DatabaseException {
+        WifiDAO wifiDAO = new WifiDAO(databaseManager);
+        List<ScanDataDTO> result = new ArrayList<>(availableData);
+        boolean found;
+        for(String bssid : bssids) {
+            found=false;
+            for(ScanDataDTO data : availableData){
+                if(bssid.equals(data.getMac())) {
+                    found =true;
+                    break;
+                }
+            }
+            if(found)
+                continue;
+            Wifi w = wifiDAO.findWifiByMac(bssid);
+            if(w!=null)
+                result.add(new ScanDataDTO(w.getSsid(),w.getMac(),null));
+        }
+        return result;
+    }
 
     private class WifiBroadcastReceiver extends BroadcastReceiver {
 
@@ -175,7 +221,7 @@ public class WifiSearchActivity extends Activity {
 
                 List<ScanResult> finalResult = new ArrayList<>();
                 for(ScanResult result : scan){
-                    Log.i("FEI",scan.toString());
+                    Log.i("FEI",result.toString());
                     ScanResult found = getScanResult(result.BSSID);
                     if(found != null){
                         if(result.level < found.level)
