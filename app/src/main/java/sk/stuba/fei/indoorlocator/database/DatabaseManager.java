@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
@@ -59,11 +61,11 @@ public class DatabaseManager {
         }
     }
 
-    public void ImportDB(File csvFile) throws IOException {
+    public void ImportDB(InputStream csvFile) throws IOException {
         if(database == null) {
             open();
         } else {
-            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+            BufferedReader br = new BufferedReader(new InputStreamReader(csvFile));
 
             String line;
             while((line = br.readLine()) != null) {

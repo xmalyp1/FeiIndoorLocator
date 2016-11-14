@@ -14,7 +14,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import sk.stuba.fei.indoorlocator.R;
 import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
@@ -102,9 +105,16 @@ public class FeiLocatorMainActivity extends Activity {
 
         if(requestCode == FILE_CHOOSER && resultCode == RESULT_OK) {
             Uri selectedfileUri = data.getData();
-            File selectedFile = new File(selectedfileUri.getPath());
+
+            InputStream selectedFileIS = null;
             try {
-                dbManager.ImportDB(selectedFile);
+                selectedFileIS = FeiLocatorMainActivity.this.getContentResolver().openInputStream(selectedfileUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                dbManager.ImportDB(selectedFileIS);
                 Toast.makeText(FeiLocatorMainActivity.this,"Database was successfully imported.", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
