@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,7 +97,8 @@ public class DetectionActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            List<ScanResult> results = wifi.getScanResults();
+            Log.i("FEI",String.valueOf(results.size()));
             try {
                 Location location = feiLocator.getActualLocation(wifi.getScanResults(),databaseManager);
                 locationText.setText(formatLocationForUI(location));

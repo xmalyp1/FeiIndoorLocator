@@ -3,6 +3,7 @@ package sk.stuba.fei.indoorlocator.database;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import sk.stuba.fei.indoorlocator.database.dao.LocationDAO;
@@ -50,7 +51,7 @@ public class DatabaseUtils {
 
     public static void processCSVLine(DatabaseManager dm, String line) {
         String[] dataArray = line.split(CSV_DATA_SEPARATOR);
-
+        Date d = new Date();
         if(dataArray.length == 5) {
             MeasurementDAO measurementDAO = new MeasurementDAO(dm);
             LocationDAO locationDAO = new LocationDAO(dm);
@@ -58,7 +59,8 @@ public class DatabaseUtils {
 
             Location location = new Location(dataArray[0].charAt(0), Integer.parseInt(dataArray[1]));
             Long locationId = locationDAO.createEntity(location);
-
+            location.setId(locationId);
+            locationDAO.updateLastScanForLocation(location);
             Wifi wifi = new Wifi(dataArray[3], dataArray[2]);
             Long wifiId = wifiDAO.createEntity(wifi);
 

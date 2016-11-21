@@ -80,7 +80,6 @@ public class FeiIndoorLocator {
             }
             if(selected != null){
               return locationDAO.getLocationByID(selected.getBlockId());
-
             }
         }
 
