@@ -17,16 +17,23 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".android.activity.WifiSearchActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".android.activity.FeiLocatorMainActivity">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".android.activity.FeiLocatorMainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".android.activity.LocationsActivity" />
-        <activity android:name=".android.activity.DetectionActivity"></activity>
+        <activity
+            android:name=".android.activity.LocationsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".android.activity.DetectionActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

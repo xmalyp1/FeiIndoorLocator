@@ -2,7 +2,10 @@ package sk.stuba.fei.indoorlocator.android.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +21,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.jar.Manifest;
 
 import sk.stuba.fei.indoorlocator.R;
 import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
 import sk.stuba.fei.indoorlocator.database.DatabaseManager;
 import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
+import sk.stuba.fei.indoorlocator.utils.PermissionManager;
 
 public class FeiLocatorMainActivity extends Activity {
 
@@ -49,8 +54,13 @@ public class FeiLocatorMainActivity extends Activity {
         whereAmI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(FeiLocatorMainActivity.this, DetectionActivity.class);
-                FeiLocatorMainActivity.this.startActivity(myIntent);
+
+                if(PermissionManager.hasPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION)) {
+                    Intent myIntent = new Intent(FeiLocatorMainActivity.this, DetectionActivity.class);
+                    FeiLocatorMainActivity.this.startActivity(myIntent);
+                } else {
+                    ActivityCompat.requestPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION);
+                }
             }
         });
     }
@@ -79,7 +89,10 @@ public class FeiLocatorMainActivity extends Activity {
 
     public void exportDB() {
         try {
-            dbManager.exportDB();
+            if(PermissionManager.hasPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_STORAGE))
+                dbManager.exportDB();
+            else
+                ActivityCompat.requestPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_STORAGE, PermissionManager.PERMISSION_REQUEST_STORAGE);
 
             Toast.makeText(FeiLocatorMainActivity.this,"Database was successfully exported.", Toast.LENGTH_SHORT).show();
         } catch (DatabaseException | IOException e) {
@@ -92,11 +105,14 @@ public class FeiLocatorMainActivity extends Activity {
 
     public void importDB() {
 
-        Intent intent = new Intent()
-                .setType("text/comma-separated-values")
-                .setAction(Intent.ACTION_GET_CONTENT);
+        if(PermissionManager.hasPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_STORAGE)) {
+            Intent intent = new Intent()
+                    .setType("text/comma-separated-values")
+                    .setAction(Intent.ACTION_GET_CONTENT);
 
-        startActivityForResult(Intent.createChooser(intent, "Select a csv file"), FILE_CHOOSER);
+            startActivityForResult(Intent.createChooser(intent, "Select a csv file"), FILE_CHOOSER);
+        } else
+            ActivityCompat.requestPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_STORAGE, PermissionManager.PERMISSION_REQUEST_STORAGE);
     }
 
     @Override
@@ -119,6 +135,26 @@ public class FeiLocatorMainActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(FeiLocatorMainActivity.this,"Database was not successfully imported.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == PermissionManager.PERMISSION_REQUEST_LOCATION) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent myIntent = new Intent(FeiLocatorMainActivity.this, DetectionActivity.class);
+                FeiLocatorMainActivity.this.startActivity(myIntent);
+            } else {
+                Toast.makeText(FeiLocatorMainActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
+            }
+        } else if(requestCode == PermissionManager.PERMISSION_REQUEST_STORAGE) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                importDB();
+            } else {
+                Toast.makeText(FeiLocatorMainActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
             }
         }
     }

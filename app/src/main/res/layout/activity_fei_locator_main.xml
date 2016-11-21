@@ -5,20 +5,30 @@
     android:id="@+id/activity_fei_locator_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/main_vertical_margin"
+    android:paddingLeft="@dimen/main_vertical_margin"
+    android:paddingRight="@dimen/main_vertical_margin"
+    android:paddingTop="@dimen/main_vertical_margin"
     tools:context="sk.stuba.fei.indoorlocator.android.activity.FeiLocatorMainActivity">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="189dp"
-        android:layout_height="60dp">
+        android:layout_marginTop="188dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <Button
             android:text="Scan wifi"
@@ -34,25 +44,4 @@
             android:id="@+id/btn_open_check_process"
             android:layout_weight="1" />
     </LinearLayout>
-
-    <TextView
-        android:text="FEI Indoor Locator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:id="@+id/textView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="80dp"
-        app:srcCompat="@drawable/ic_action_name"
-        android:layout_marginTop="38dp"
-        android:id="@+id/imageView3"
-        android:scaleType="fitXY"
-        android:layout_height="80dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
-
 </RelativeLayout>
