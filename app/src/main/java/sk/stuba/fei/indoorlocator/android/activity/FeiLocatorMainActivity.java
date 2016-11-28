@@ -3,6 +3,7 @@ package sk.stuba.fei.indoorlocator.android.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.io.File;
@@ -65,26 +68,28 @@ public class FeiLocatorMainActivity extends Activity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.data_action_bar, menu);
-        return true;
-    }
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(FeiLocatorMainActivity.this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.db_handle_menu, popup.getMenu());
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.import_option:
-                importDB();
-                return true;
-            case R.id.export_option:
-                exportDB();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.import_option:
+                        importDB();
+                        return true;
+                    case R.id.export_option:
+                        exportDB();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popup.show();
     }
 
     public void exportDB() {

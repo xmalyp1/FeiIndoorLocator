@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="actionBarBackground">#00FFFFFF</color>
+    <color name="colorPrimary">#005eb4</color>
+    <color name="colorPrimaryDark">#013f78</color>
+    <color name="colorAccent">#545454</color>
+    <color name="transparentBG">#00FFFFFF</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

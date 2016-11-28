@@ -5,43 +5,67 @@
     android:id="@+id/activity_fei_locator_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/main_vertical_margin"
-    android:paddingLeft="@dimen/main_vertical_margin"
-    android:paddingRight="@dimen/main_vertical_margin"
-    android:paddingTop="@dimen/main_vertical_margin"
-    tools:context="sk.stuba.fei.indoorlocator.android.activity.FeiLocatorMainActivity">
+    android:paddingTop="@dimen/db_handler_btn_padding_v"
+    android:paddingBottom="@dimen/db_handler_btn_padding_v"
+    android:paddingRight="@dimen/db_handler_btn_padding_h"
+    android:paddingLeft="@dimen/db_handler_btn_padding_h"
+    tools:context="sk.stuba.fei.indoorlocator.android.activity.FeiLocatorMainActivity"
+    android:background="@drawable/bg">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="true">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg"/>
-    </RelativeLayout>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_vert_white_24dp"
+        android:background="@color/transparentBG"
+        android:id="@+id/impexpButton"
+        android:onClick="showPopup"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/app_logo"
+        android:id="@+id/imageView"
+        android:padding="@dimen/db_handler_btn_padding_v"
+        android:layout_marginTop="40dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_marginTop="188dp"
-        android:layout_height="60dp"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="60dp" >
 
         <Button
             android:text="Scan wifi"
+            android:drawableTop="@drawable/ic_settings_input_antenna_white_48dp"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_open_scan_process"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:layout_margin="@dimen/db_handler_btn_padding_h"
+            android:paddingTop="@dimen/db_handler_btn_padding_v"
+            android:paddingBottom="@dimen/db_handler_btn_padding_v"
+            android:textSize="@dimen/home_btn_text_size"/>
 
         <Button
             android:text="Where Am I ?"
+            android:drawableTop="@drawable/ic_person_pin_circle_white_48dp"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_open_check_process"
-            android:layout_weight="1" />
+            android:layout_weight="0.63"
+            android:layout_gravity="bottom"
+            android:layout_margin="@dimen/db_handler_btn_padding_h"
+            android:paddingTop="@dimen/db_handler_btn_padding_v"
+            android:paddingBottom="@dimen/db_handler_btn_padding_v"
+            android:textSize="@dimen/home_btn_text_size"/>
     </LinearLayout>
 </RelativeLayout>
