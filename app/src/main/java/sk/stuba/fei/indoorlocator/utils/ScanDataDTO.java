@@ -47,4 +47,25 @@ public class ScanDataDTO {
                 ", level=" + level +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ScanDataDTO)) return false;
+
+        ScanDataDTO that = (ScanDataDTO) o;
+
+        if (!name.equals(that.name)) return false;
+        if (!mac.equals(that.mac)) return false;
+        return level != null ? level.equals(that.level) : that.level == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + mac.hashCode();
+        result = 31 * result + (level != null ? level.hashCode() : 0);
+        return result;
+    }
 }

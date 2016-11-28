@@ -18,34 +18,32 @@
         android:id="@+id/textView2"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    <Button
-        android:id="@+id/refresh"
-        android:text="Scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Scanning networks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scanProgress"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/saveBtn"
+            android:layout_weight="0.23" />
+
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="264dp"
-        android:id="@+id/wifi_list"
-        android:layout_weight="0.40" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/save_layout_container"
-        android:layout_weight="0.43">
-
-        <Button
-            android:text="@string/btn_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_save"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="21dp" />
-
-    </RelativeLayout>
+        android:id="@+id/wifi_list"
+        android:layout_marginTop="10dp" />
 
 
 </LinearLayout>

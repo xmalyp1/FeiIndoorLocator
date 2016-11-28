@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -21,7 +22,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,6 +36,7 @@ import sk.stuba.fei.indoorlocator.R;
 import sk.stuba.fei.indoorlocator.android.adapter.WifiScanResultAdapter;
 import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
 import sk.stuba.fei.indoorlocator.database.DatabaseManager;
+import sk.stuba.fei.indoorlocator.database.DatabaseUtils;
 import sk.stuba.fei.indoorlocator.database.dao.LocationDAO;
 import sk.stuba.fei.indoorlocator.database.dao.MeasurementDAO;
 import sk.stuba.fei.indoorlocator.database.dao.WifiDAO;
@@ -48,13 +53,14 @@ public class WifiSearchActivity extends Activity {
     private static final int SCAN_PROCESS_SECONDS = 30;
 
     private WifiManager wifi;
-    private List<ScanResult> wifiResults;
     private WifiBroadcastReceiver wifiBroadcastReceiver;
     private WifiScanResultAdapter wifiScanResultAdapter;
     private ListView scanResultListView;
-    private RelativeLayout saveFormLayout;
     private DatabaseManager databaseManager;
     private Location selectedLocation;
+    private TextView progressSelection;
+    private Button save;
+    private int progressCounter = 0;
 
 
 
@@ -65,61 +71,39 @@ public class WifiSearchActivity extends Activity {
         selectedLocation = (Location)getIntent().getSerializableExtra("LOCATION");
         databaseManager = new DatabaseManager(new DatabaseHelper(getApplicationContext()));
         databaseManager.open();
-        saveFormLayout = (RelativeLayout) this.findViewById(R.id.save_layout_container);
-        saveFormLayout.setVisibility(View.INVISIBLE);
-        wifiResults = new ArrayList<ScanResult>();
         wifiBroadcastReceiver = new WifiBroadcastReceiver();
         wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
+        final LocationManager manager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) )
+            Toast.makeText(WifiSearchActivity.this, "GPS is disabled! The functionality may not work correctly.", Toast.LENGTH_LONG).show();
 
         // askForWifiPermission();
         if (wifi.isWifiEnabled() == false)
         {
-            Toast.makeText(getApplicationContext(), "Wifi is disabled..making it enabled", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Enabling wifi option...", Toast.LENGTH_LONG).show();
             wifi.setWifiEnabled(true);
         }
+        wifiScanResultAdapter = new WifiScanResultAdapter(getApplicationContext(), R.layout.wifi_scan_row, R.id.wifi_list, DatabaseUtils.getScanDataForLocation(selectedLocation,databaseManager), getBSIDOnLocation(selectedLocation));
+        scanResultListView = (ListView) findViewById(R.id.wifi_list);
+        scanResultListView.setAdapter(wifiScanResultAdapter);
 
-        Button scanBtn = (Button)this.findViewById(R.id.refresh);
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(PermissionManager.hasPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION)) {
 
-                if(PermissionManager.hasPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION)) {
-                    registerReceiver(wifiBroadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                    wifiResults.clear();
-                    wifi.startScan();
-                    final ProgressDialog progDailog = ProgressDialog.show(WifiSearchActivity.this,
-                            "Scanning wifi networks",
-                            "Please wait....", true);
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<ScanDataDTO> data = null;
-                            try {
-                                data = getDataToDisplay(ScanResultMapper.mapScanResults(wifiResults), getBSIDOnLocation(selectedLocation));
-                            } catch (DatabaseException e) {
-                                data = ScanResultMapper.mapScanResults(wifiResults);
-                            }
-                            wifiScanResultAdapter = new WifiScanResultAdapter(getApplicationContext(), R.layout.wifi_scan_row, R.id.wifi_list, data, getBSIDOnLocation(selectedLocation));
-                            scanResultListView = (ListView) findViewById(R.id.wifi_list);
-                            scanResultListView.setAdapter(wifiScanResultAdapter);
-                            unregisterReceiver(wifiBroadcastReceiver);
-                            progDailog.dismiss();
-                            if (wifiResults == null || wifiResults.isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "No results found!", Toast.LENGTH_LONG).show();
-                                return;
-                            } else {
-                                saveFormLayout.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }, 1000 * SCAN_PROCESS_SECONDS);
-                } else {
-                    ActivityCompat.requestPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION);
-                }
-            }
-        });
+            registerReceiver(wifiBroadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            wifi.startScan();
+            progressSelection = (TextView)this.findViewById(R.id.scanProgress);
+            progressSelection.setText("Scanning networks..");
+            Toast.makeText(getApplicationContext(), "Starting to scan the networks...", Toast.LENGTH_LONG).show();
+            Log.i("FEI_SCAN","Starting to scan...");
+        }else{
+            ActivityCompat.requestPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION);
+        }
 
-        Button save = (Button)this.findViewById(R.id.btn_save);
+
+
+        save = (Button)this.findViewById(R.id.saveBtn);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,9 +121,7 @@ public class WifiSearchActivity extends Activity {
         });
         if(selectedLocation == null)
             save.setClickable(false);
-        else{
-            scanBtn.setText("Scan for location "+ selectedLocation.getBlock()+" "+selectedLocation.getFloor());
-        }
+
     }
 
     @Override
@@ -157,6 +139,7 @@ public class WifiSearchActivity extends Activity {
     protected void onResume() {
         databaseManager.open();
         registerReceiver(wifiBroadcastReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifi.startScan();
         super.onResume();
     }
 
@@ -170,6 +153,7 @@ public class WifiSearchActivity extends Activity {
         MeasurementDAO measurementDAO = new MeasurementDAO(databaseManager);
 
         for(ScanDataDTO result : wifiScanResultAdapter.getSelectedScanResults()){
+            Log.i("FEI_SAVE_MEAUSREMENT","Saving: "+result.toString());
             Wifi wifi = wifiDAO.findWifiByMac(result.getMac());
             if(wifi == null){
                 wifi = new Wifi(result.getName(),result.getMac());
@@ -177,13 +161,15 @@ public class WifiSearchActivity extends Activity {
                 wifi.setId(l);
             }
             measurementDAO.createEntity(new Measurement(result.getLevel(),selectedLocation.getId(),wifi.getId()));
-            Log.i("FEI_SAVE","Saving data: "+result.toString());
         }
 
         locationDAO.updateLastScanForLocation(selectedLocation);
     }
 
     private Set<String> getBSIDOnLocation(Location loc){
+        if(loc == null)
+            return new HashSet<>();
+
         MeasurementDAO measurementDAO = new MeasurementDAO(databaseManager);
         WifiDAO wifiDAO = new WifiDAO(databaseManager);
         List<Measurement> measurementOnLocation = measurementDAO.findMeasurementsForLocation(loc);
@@ -224,32 +210,19 @@ public class WifiSearchActivity extends Activity {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                List<ScanResult> scan =wifi.getScanResults();
-
-                List<ScanResult> finalResult = new ArrayList<>();
-                for(ScanResult result : scan){
-                    Log.i("FEI",result.toString());
-                    ScanResult found = getScanResult(result.BSSID);
-                    if(found != null){
-                        if(result.level < found.level)
-                            finalResult.add(result);
-                        else
-                            finalResult.add(found);
-                    }else {
-                        finalResult.add(result);
-                    }
+                Log.i("FEI","Data received...");
+                wifiScanResultAdapter.setDataForUI(ScanResultMapper.mapScanResults(wifi.getScanResults()));
+                wifiScanResultAdapter.notifyDataSetChanged();
+                if(progressCounter % 3 == 0)
+                    progressSelection.setText("Scanning networks");
+                else{
+                    progressSelection.setText(progressSelection.getText()+".");
                 }
-                wifiResults = finalResult;
+                progressCounter++;
+
+
             }
 
-        private ScanResult getScanResult(String mac){
-            for(ScanResult result:wifiResults){
-                if(result.BSSID.equals(mac)){
-                    return result;
-                }
-            }
-            return null;
-        }
     }
 
     @Override
@@ -262,6 +235,7 @@ public class WifiSearchActivity extends Activity {
                 WifiSearchActivity.this.startActivity(myIntent);
             } else {
                 Toast.makeText(WifiSearchActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
+                //TODO maybe redirect to the main activity....
             }
         }
     }
