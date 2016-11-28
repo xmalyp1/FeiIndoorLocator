@@ -4,7 +4,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import sk.stuba.fei.indoorlocator.database.dao.LocationDAO;
 import sk.stuba.fei.indoorlocator.database.dao.MeasurementDAO;
@@ -13,6 +15,7 @@ import sk.stuba.fei.indoorlocator.database.entities.Location;
 import sk.stuba.fei.indoorlocator.database.entities.Measurement;
 import sk.stuba.fei.indoorlocator.database.entities.Wifi;
 import sk.stuba.fei.indoorlocator.database.exception.DatabaseException;
+import sk.stuba.fei.indoorlocator.utils.ScanDataDTO;
 
 /**
  * Created by Martin on 25.10.2016.
@@ -71,5 +74,28 @@ public class DatabaseUtils {
             Log.e(TAG, "There must be 5 params: " + dataArray.toString());
         }
 
+    }
+
+
+    public static List<ScanDataDTO> getScanDataForLocation(Location location, DatabaseManager dbm){
+
+        if(dbm == null || location == null || location.getId() == null) {
+            Log.w("FEI_ScanDataForLocation","Unable to perform the operation. Retrieving empty list.");
+            return new ArrayList<>();
+        }
+        Set<ScanDataDTO> results = new HashSet<>();
+        MeasurementDAO measurementDAO = new MeasurementDAO(dbm);
+        WifiDAO wifiDAO = new WifiDAO(dbm);
+
+        List<Measurement> measurements = measurementDAO.findMeasurementsForLocation(location);
+        for(Measurement measurement : measurements){
+            try {
+                Wifi wifi = wifiDAO.findWifiByID(measurement.getWifiId());
+                results.add(new ScanDataDTO(wifi.getSsid(),wifi.getMac(),null));
+            } catch (DatabaseException e) {
+                Log.e("FEI_DB_EXCEPTION",e.getMessage());
+            }
+        }
+        return new ArrayList<>(results);
     }
 }

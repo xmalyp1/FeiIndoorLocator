@@ -18,22 +18,26 @@
         <activity
             android:name=".android.activity.WifiSearchActivity"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:label="Wifi scanner">
+        </activity>
         <activity
             android:name=".android.activity.FeiLocatorMainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:label="FEI Indoor locator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".android.activity.LocationsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:label="Locations"/>
         <activity
             android:name=".android.activity.DetectionActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:label="Where Am I ?"/>
     </application>
 
 </manifest>
