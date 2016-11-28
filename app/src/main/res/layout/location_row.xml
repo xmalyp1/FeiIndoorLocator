@@ -1,45 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@color/colorLightGrey"
+    android:layout_marginBottom="@dimen/db_handler_btn_padding_v"
+    android:paddingBottom="@dimen/db_handler_btn_padding_h">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/db_handler_btn_padding_h" >
+
+            <TextView
+                android:text="Block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:textColor="@color/colorWhite"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:text="A"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/block_id"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/floor_id"
+                    android:layout_weight="1"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="32sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="46dp">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:padding="@dimen/db_handler_btn_padding_h">
 
         <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/block_id"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:paddingLeft="6dp"
-            android:textColor="@color/colorPrimaryDark"/>
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/floor_id"
-            android:layout_weight="1"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:textColor="@color/colorPrimaryDark"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:text="Last update:"
+            android:text="Last update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fixed_last_update"
-            android:paddingLeft="17dp"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:paddingLeft="6dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            />
 
         <TextView
             android:text="TextView"
@@ -47,7 +77,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/update_date"
             android:layout_weight="1"
-            android:paddingLeft="5dp"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:paddingLeft="6dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp" />
     </LinearLayout>
+
 </LinearLayout>

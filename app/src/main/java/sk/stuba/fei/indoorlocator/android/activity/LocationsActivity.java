@@ -39,14 +39,6 @@ public class LocationsActivity extends ListActivity {
         locationsAdapater = new LocationsAdapter(getApplicationContext(),locationList);
         setListAdapter(locationsAdapater);
 
-        Button btn = (Button)findViewById(R.id.btn_open_add_dialog);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initializeDialog();
-            }
-        });
-
     }
 
     @Override
@@ -57,7 +49,7 @@ public class LocationsActivity extends ListActivity {
         this.startActivity(i);
     }
 
-    private void initializeDialog(){
+    public void initializeDialog(View v){
         final Dialog dialog = new Dialog(LocationsActivity.this);
         dialog.setContentView(R.layout.add_location_dialog);
         dialog.setTitle("Add new location");

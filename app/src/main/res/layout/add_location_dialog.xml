@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/main_vertical_margin"
     android:weightSum="1">
 
     <LinearLayout
@@ -44,8 +45,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="22dp"
-            android:id="@+id/btn_add_location" />
+            android:layout_marginTop="16dp"
+            android:padding="@dimen/db_handler_btn_padding_h"
+            android:drawableLeft="@drawable/ic_add_circle_white_24dp"
+            android:drawablePadding="@dimen/db_handler_btn_padding_h"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/btn_add_location"
+            android:background="@color/colorPrimaryDark" />
     </RelativeLayout>
 
 </LinearLayout>

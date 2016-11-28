@@ -15,7 +15,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_more_vert_white_24dp"
+        android:src="@drawable/ic_more_vert_white_36dp"
         android:background="@color/transparentBG"
         android:id="@+id/impexpButton"
         android:onClick="showPopup"
