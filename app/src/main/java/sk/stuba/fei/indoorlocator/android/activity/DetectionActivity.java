@@ -10,6 +10,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,8 +47,11 @@ public class DetectionActivity extends Activity {
         feiLocator = new FeiIndoorLocator();
         registerReceiver(feiLocatorReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
+        startDetection(null);
+    }
 
-        if (wifi.isWifiEnabled() == false)
+    public void startDetection(View v) {
+        if (!wifi.isWifiEnabled())
         {
             Toast.makeText(getApplicationContext(), "Wifi is disabled! Making it enabled.", Toast.LENGTH_LONG).show();
             wifi.setWifiEnabled(true);
