@@ -1,57 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@color/colorLightGrey"
+    android:paddingBottom="4dp"
+    android:layout_height="68dp">
 
-    <CheckBox
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/wifiCheckBox"
-        android:checked="true"
-        android:layout_weight="0.02" />
+        android:background="@color/colorWhite"
+        android:id="@+id/scanItemLayout">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="0.19">
-
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ssid"
-            android:layout_weight="0.13"
-            android:labelFor="@+id/wifiCheckBox"
-            android:text="meno"
-            android:gravity="bottom|left|center_vertical"
-            android:textColor="@color/colorPrimaryDark" />
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mac_adr"
-            android:layout_weight="0.19"
-            android:text="adresa"
-            android:gravity="top|left|center_vertical"
-            android:textColor="@color/colorPrimaryDark" />
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_signal_wifi_0_bar_black_24dp"
+                android:id="@+id/level"
+                android:layout_weight=".20"
+                android:padding="16dp" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.70">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:srcCompat="@drawable/ic_signal_wifi_0_bar_black_24dp"
-        android:id="@+id/level"
-        android:layout_weight="0.02" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ssid"
+                    android:layout_weight="0.13"
+                    android:labelFor="@+id/wifiCheckBox"
+                    android:text="meno"
+                    android:gravity="bottom|left|center_vertical"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="28dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/flag"
-        android:layout_weight="0.11"
-        android:textColor="@color/colorPrimaryDark"
-        android:gravity="center_vertical|center_horizontal"
-         />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mac_adr"
+                    android:layout_weight="0.10"
+                    android:text="adresa"
+                    android:gravity="top|left|center_vertical"
+                    android:textColor="@color/colorPrimaryDark" />
 
-</LinearLayout>
+            </LinearLayout>
+
+            <CheckBox
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/wifiCheckBox"
+                android:checked="true"
+                android:layout_weight=".20" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

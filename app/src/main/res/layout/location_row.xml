@@ -5,7 +5,7 @@
     android:weightSum="1"
     android:background="@color/colorLightGrey"
     android:layout_marginBottom="@dimen/db_handler_btn_padding_v"
-    android:paddingBottom="@dimen/db_handler_btn_padding_h">
+    android:paddingBottom="4dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"

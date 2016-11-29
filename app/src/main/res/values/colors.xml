@@ -6,4 +6,6 @@
     <color name="transparentBG">#00FFFFFF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLightGrey">#dddddd</color>
+    <color name="colorLightGreen">#f1ffdb</color>
+    <color name="colorLightRed">#ffdbdb</color>
 </resources>

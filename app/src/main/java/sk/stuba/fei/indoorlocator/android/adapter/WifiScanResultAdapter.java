@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -155,7 +156,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
             holder.checkBox = (CheckBox) row.findViewById(R.id.wifiCheckBox);
             holder.ssid =  (TextView)row.findViewById(R.id.ssid);
             holder.level = (ImageView)row.findViewById(R.id.level);
-            holder.flag = (TextView) row.findViewById(R.id.flag);
+            holder.itemLayout = (RelativeLayout) row.findViewById(R.id.scanItemLayout);
             row.setTag(holder);
         }else{
             holder = (ViewHolder) row.getTag();
@@ -164,12 +165,10 @@ public class WifiScanResultAdapter extends BaseAdapter {
         holder.ssid.setText(result.getName());
 
         holder.mac.setText(result.getMac());
-        holder.flag.setText("");
 
 
         if(!wifiOnLocation.contains(result.getMac())) {
-            holder.flag.setTextColor(Color.GREEN);
-            holder.flag.setText("[NEW]");
+            holder.itemLayout.setBackgroundResource(R.color.colorLightGreen);
         }
 
         if(result.getLevel() != null) {
@@ -198,8 +197,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
             }
         }else{
             holder.level.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);
-            holder.flag.setTextColor(Color.RED);
-            holder.flag.setText("[N/A]");
+            holder.itemLayout.setBackgroundResource(R.color.colorLightRed);
         }
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -237,7 +235,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
         protected TextView ssid;
         protected ImageView level;
         protected CheckBox checkBox;
-        protected TextView flag;
+        protected RelativeLayout itemLayout;
     }
 
 }

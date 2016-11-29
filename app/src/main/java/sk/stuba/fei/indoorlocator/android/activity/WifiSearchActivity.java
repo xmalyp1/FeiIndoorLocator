@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -58,7 +59,7 @@ public class WifiSearchActivity extends Activity {
     private ListView scanResultListView;
     private DatabaseManager databaseManager;
     private Location selectedLocation;
-    private TextView progressSelection;
+    private ProgressBar progressSelection;
     private Button save;
     private int progressCounter = 0;
 
@@ -93,35 +94,31 @@ public class WifiSearchActivity extends Activity {
 
             registerReceiver(wifiBroadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             wifi.startScan();
-            progressSelection = (TextView)this.findViewById(R.id.scanProgress);
-            progressSelection.setText("Scanning networks..");
+
+            progressSelection = (ProgressBar) this.findViewById(R.id.scanProgressBar);
+
             Toast.makeText(getApplicationContext(), "Starting to scan the networks...", Toast.LENGTH_LONG).show();
             Log.i("FEI_SCAN","Starting to scan...");
         }else{
             ActivityCompat.requestPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION);
         }
 
-
-
-        save = (Button)this.findViewById(R.id.saveBtn);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    saveMeasurement();
-                    Toast.makeText(getApplicationContext(), "Measurement was saved sucessfully!", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(WifiSearchActivity.this,FeiLocatorMainActivity.class);
-                    WifiSearchActivity.this.startActivity(i);
-                } catch (DatabaseException e) {
-                    Toast.makeText(getApplicationContext(), "Unable to save the measurement!", Toast.LENGTH_LONG).show();
-                    Log.i("FEI","Unable to save measurement");
-                    e.printStackTrace();
-                }
-            }
-        });
         if(selectedLocation == null)
             save.setClickable(false);
 
+    }
+
+    public void saveWifiMeasurement(View v) {
+        try {
+            saveMeasurement();
+            Toast.makeText(getApplicationContext(), "Measurement was saved sucessfully!", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(WifiSearchActivity.this,FeiLocatorMainActivity.class);
+            WifiSearchActivity.this.startActivity(i);
+        } catch (DatabaseException e) {
+            Toast.makeText(getApplicationContext(), "Unable to save the measurement!", Toast.LENGTH_LONG).show();
+            Log.i("FEI","Unable to save measurement");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -217,9 +214,9 @@ public class WifiSearchActivity extends Activity {
                 wifiScanResultAdapter.setDataForUI(ScanResultMapper.mapScanResults(wifi.getScanResults()));
                 wifiScanResultAdapter.notifyDataSetChanged();
                 if(progressCounter % 3 == 0)
-                    progressSelection.setText("Scanning networks");
+                    progressSelection.setVisibility(View.GONE);
                 else{
-                    progressSelection.setText(progressSelection.getText()+".");
+                    progressSelection.setVisibility(View.VISIBLE);
                 }
                 progressCounter++;
 
