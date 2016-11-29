@@ -92,10 +92,13 @@ public class WifiScanResultAdapter extends BaseAdapter {
                 scanDataDTO.setLevel(sdata.getLevel());
             }
         }
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Log.i("RESULT_SORT","Sorting results....");
             Collections.sort(data, Comparator.nullsLast(Comparator.comparingInt(ScanDataDTO::getLevel)));
         }else{
+            Log.i("RESULT_SORT","Sorting results....");
+
             Collections.sort(data, NullComparator.atEnd(new Comparator<ScanDataDTO>() {
                 @Override
                 public int compare(ScanDataDTO o1, ScanDataDTO o2) {
@@ -129,9 +132,13 @@ public class WifiScanResultAdapter extends BaseAdapter {
         return data.indexOf(position);
     }
 
+
+
     @NonNull
     @Override
     public View getView(int position, View row, ViewGroup parent) {
+        Log.i("getView","Calling get view");
+
         final ViewHolder holder;
         final ScanDataDTO result = getItem(position);
         if(row == null) {
@@ -163,6 +170,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
             holder.level.setText(Integer.toString(result.getLevel()));
             holder.flag.setText("");
         }else{
+            holder.level.setText("");
             holder.flag.setTextColor(Color.RED);
             holder.flag.setText("[N/A]");
         }
