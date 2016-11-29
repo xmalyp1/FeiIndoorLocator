@@ -102,7 +102,7 @@ public class LocationDAO extends AbstractDAO<Location> {
     }
 
     public List<Location> getAllLocations(){
-        Cursor c = getDatabase().query(getDatabaseHelper().LOCATION_TABLE,null,null,null,null,null,Location.Field.BLOCK);
+        Cursor c = getDatabase().query(getDatabaseHelper().LOCATION_TABLE,null,null,null,null,null,Location.Field.BLOCK + " ASC, " + Location.Field.FLOOR  + " ASC");
         return getEntityFromCursor(c);
     }
 
