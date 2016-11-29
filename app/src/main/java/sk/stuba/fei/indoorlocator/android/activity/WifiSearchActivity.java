@@ -61,7 +61,6 @@ public class WifiSearchActivity extends Activity {
     private Location selectedLocation;
     private ProgressBar progressSelection;
     private Button save;
-    private int progressCounter = 0;
 
 
 
@@ -96,7 +95,7 @@ public class WifiSearchActivity extends Activity {
             wifi.startScan();
 
             progressSelection = (ProgressBar) this.findViewById(R.id.scanProgressBar);
-
+            progressSelection.setVisibility(View.INVISIBLE);
             Toast.makeText(getApplicationContext(), "Starting to scan the networks...", Toast.LENGTH_LONG).show();
             Log.i("FEI_SCAN","Starting to scan...");
         }else{
@@ -211,16 +210,10 @@ public class WifiSearchActivity extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i("FEI","Data received...");
+                progressSelection.setVisibility(View.VISIBLE);
                 wifiScanResultAdapter.setDataForUI(ScanResultMapper.mapScanResults(wifi.getScanResults()));
                 wifiScanResultAdapter.notifyDataSetChanged();
-                if(progressCounter % 3 == 0)
-                    progressSelection.setVisibility(View.GONE);
-                else{
-                    progressSelection.setVisibility(View.VISIBLE);
-                }
-                progressCounter++;
-
-
+                progressSelection.setVisibility(View.GONE);
             }
 
     }

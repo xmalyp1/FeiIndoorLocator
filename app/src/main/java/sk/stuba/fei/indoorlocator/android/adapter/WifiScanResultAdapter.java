@@ -143,8 +143,6 @@ public class WifiScanResultAdapter extends BaseAdapter {
     @NonNull
     @Override
     public View getView(int position, View row, ViewGroup parent) {
-        Log.i("getView","Calling get view");
-
         final ViewHolder holder;
         final ScanDataDTO result = getItem(position);
         if(row == null) {
@@ -169,34 +167,40 @@ public class WifiScanResultAdapter extends BaseAdapter {
 
         if(!wifiOnLocation.contains(result.getMac())) {
             holder.itemLayout.setBackgroundResource(R.color.colorLightGreen);
+        }else{
+            holder.itemLayout.setBackgroundResource(R.color.colorLightBlue);
         }
 
         if(result.getLevel() != null) {
-            int level = WifiManager.calculateSignalLevel(result.getLevel(),4)+1;
+            int level = WifiManager.calculateSignalLevel(result.getLevel(),5)+1;
             switch (level){
                 case 1:
-                    holder.level.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);
                     break;
 
                 case 2:
-                    holder.level.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);
                     break;
 
                 case 3:
-                    holder.level.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);
                     break;
 
                 case 4:
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);
+                    break;
+
+                case 5:
                     holder.level.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
                     break;
 
                 default:
-                    holder.level.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_off_black_24dp);
                     break;
 
             }
         }else{
-            holder.level.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);
+            holder.level.setImageResource(R.drawable.ic_signal_wifi_off_black_24dp);
             holder.itemLayout.setBackgroundResource(R.color.colorLightRed);
         }
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -212,6 +216,8 @@ public class WifiScanResultAdapter extends BaseAdapter {
         if(result.getLevel() == null) {
             holder.checkBox.setChecked(false);
             holder.checkBox.setClickable(false);
+            holder.checkBox.setVisibility(View.GONE);
+
         }else{
             holder.checkBox.setChecked(selectedScanResults.contains(result));
             holder.checkBox.setClickable(true);
