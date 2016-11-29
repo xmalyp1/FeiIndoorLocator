@@ -3,6 +3,7 @@ package sk.stuba.fei.indoorlocator.android.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -132,7 +134,10 @@ public class WifiScanResultAdapter extends BaseAdapter {
         return data.indexOf(position);
     }
 
-
+    public void setData(List<ScanDataDTO> scanDataDTOs){
+        data.clear();
+        data.addAll(scanDataDTOs);
+    }
 
     @NonNull
     @Override
@@ -149,7 +154,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
             holder.mac = (TextView) row.findViewById(R.id.mac_adr);
             holder.checkBox = (CheckBox) row.findViewById(R.id.wifiCheckBox);
             holder.ssid =  (TextView)row.findViewById(R.id.ssid);
-            holder.level = (TextView)row.findViewById(R.id.level);
+            holder.level = (ImageView)row.findViewById(R.id.level);
             holder.flag = (TextView) row.findViewById(R.id.flag);
             row.setTag(holder);
         }else{
@@ -159,6 +164,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
         holder.ssid.setText(result.getName());
 
         holder.mac.setText(result.getMac());
+        holder.flag.setText("");
 
 
         if(!wifiOnLocation.contains(result.getMac())) {
@@ -167,10 +173,31 @@ public class WifiScanResultAdapter extends BaseAdapter {
         }
 
         if(result.getLevel() != null) {
-            holder.level.setText(Integer.toString(result.getLevel()));
-            holder.flag.setText("");
+            int level = WifiManager.calculateSignalLevel(result.getLevel(),4)+1;
+            switch (level){
+                case 1:
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_1_bar_black_24dp);
+                    break;
+
+                case 2:
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_2_bar_black_24dp);
+                    break;
+
+                case 3:
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_3_bar_black_24dp);
+                    break;
+
+                case 4:
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
+                    break;
+
+                default:
+                    holder.level.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);
+                    break;
+
+            }
         }else{
-            holder.level.setText("");
+            holder.level.setImageResource(R.drawable.ic_signal_wifi_0_bar_black_24dp);
             holder.flag.setTextColor(Color.RED);
             holder.flag.setText("[N/A]");
         }
@@ -208,7 +235,7 @@ public class WifiScanResultAdapter extends BaseAdapter {
     private class ViewHolder {
         protected TextView mac;
         protected TextView ssid;
-        protected TextView level;
+        protected ImageView level;
         protected CheckBox checkBox;
         protected TextView flag;
     }

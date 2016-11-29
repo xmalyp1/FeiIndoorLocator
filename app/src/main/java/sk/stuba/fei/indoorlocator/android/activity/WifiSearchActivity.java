@@ -138,6 +138,9 @@ public class WifiSearchActivity extends Activity {
     @Override
     protected void onResume() {
         databaseManager.open();
+        if(wifiScanResultAdapter != null)
+            wifiScanResultAdapter.setData(DatabaseUtils.getScanDataForLocation(selectedLocation,databaseManager));
+        wifiScanResultAdapter.notifyDataSetChanged();
         registerReceiver(wifiBroadcastReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifi.startScan();
         super.onResume();
