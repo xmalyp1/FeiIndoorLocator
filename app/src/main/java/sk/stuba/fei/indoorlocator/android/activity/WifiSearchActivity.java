@@ -89,18 +89,13 @@ public class WifiSearchActivity extends Activity {
         scanResultListView = (ListView) findViewById(R.id.wifi_list);
         scanResultListView.setAdapter(wifiScanResultAdapter);
 
-        if(PermissionManager.hasPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION)) {
+        registerReceiver(wifiBroadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifi.startScan();
 
-            registerReceiver(wifiBroadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-            wifi.startScan();
-
-            progressSelection = (ProgressBar) this.findViewById(R.id.scanProgressBar);
-            progressSelection.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(), "Starting to scan the networks...", Toast.LENGTH_LONG).show();
-            Log.i("FEI_SCAN","Starting to scan...");
-        }else{
-            ActivityCompat.requestPermissions(WifiSearchActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION);
-        }
+        progressSelection = (ProgressBar) this.findViewById(R.id.scanProgressBar);
+        progressSelection.setVisibility(View.VISIBLE);
+        Toast.makeText(getApplicationContext(), "Starting to scan the networks...", Toast.LENGTH_LONG).show();
+        Log.i("FEI_SCAN","Starting to scan...");
 
         if(selectedLocation == null)
             save.setClickable(false);
@@ -216,21 +211,6 @@ public class WifiSearchActivity extends Activity {
                 progressSelection.setVisibility(View.GONE);
             }
 
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == PermissionManager.PERMISSION_REQUEST_LOCATION) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent myIntent = new Intent(WifiSearchActivity.this, DetectionActivity.class);
-                WifiSearchActivity.this.startActivity(myIntent);
-            } else {
-                Toast.makeText(WifiSearchActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
-                //TODO maybe redirect to the main activity....
-            }
-        }
     }
 
 }

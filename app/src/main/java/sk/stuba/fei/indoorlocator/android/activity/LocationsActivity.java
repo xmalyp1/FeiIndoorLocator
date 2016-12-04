@@ -3,7 +3,9 @@ package sk.stuba.fei.indoorlocator.android.activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import sk.stuba.fei.indoorlocator.database.DatabaseHelper;
 import sk.stuba.fei.indoorlocator.database.DatabaseManager;
 import sk.stuba.fei.indoorlocator.database.dao.LocationDAO;
 import sk.stuba.fei.indoorlocator.database.entities.Location;
+import sk.stuba.fei.indoorlocator.utils.PermissionManager;
 
 public class LocationsActivity extends ListActivity {
 
@@ -26,7 +29,7 @@ public class LocationsActivity extends ListActivity {
     private LocationDAO locationDAO;
     private List<Location> locationList;
     private LocationsAdapter locationsAdapater;
-
+    private int actualPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +42,21 @@ public class LocationsActivity extends ListActivity {
         locationsAdapater = new LocationsAdapter(getApplicationContext(),locationList);
         setListAdapter(locationsAdapater);
 
+        actualPosition = -1;
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Intent i = new Intent(LocationsActivity.this,WifiSearchActivity.class);
-        i.putExtra("LOCATION",locationList.get(position));
-        this.startActivity(i);
+
+        actualPosition = position;
+        if(PermissionManager.hasPermissions(LocationsActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION)) {
+            Intent i = new Intent(LocationsActivity.this, WifiSearchActivity.class);
+            i.putExtra("LOCATION", locationList.get(position));
+            this.startActivity(i);
+        } else {
+            ActivityCompat.requestPermissions(LocationsActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION);
+        }
     }
 
     public void initializeDialog(View v){
@@ -83,6 +93,26 @@ public class LocationsActivity extends ListActivity {
         });
 
         dialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == PermissionManager.PERMISSION_REQUEST_LOCATION) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                if(actualPosition != -1) {
+                    Intent myIntent = new Intent(LocationsActivity.this, WifiSearchActivity.class);
+                    myIntent.putExtra("LOCATION", locationList.get(actualPosition));
+                    LocationsActivity.this.startActivity(myIntent);
+                }
+
+            } else {
+                Toast.makeText(LocationsActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
+                //TODO maybe redirect to the main activity....
+            }
+        }
     }
 
 }
