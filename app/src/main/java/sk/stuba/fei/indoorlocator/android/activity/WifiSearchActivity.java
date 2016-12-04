@@ -95,7 +95,7 @@ public class WifiSearchActivity extends Activity {
             wifi.startScan();
 
             progressSelection = (ProgressBar) this.findViewById(R.id.scanProgressBar);
-            progressSelection.setVisibility(View.INVISIBLE);
+            progressSelection.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(), "Starting to scan the networks...", Toast.LENGTH_LONG).show();
             Log.i("FEI_SCAN","Starting to scan...");
         }else{

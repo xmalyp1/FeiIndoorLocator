@@ -39,7 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/scanProgressBar"
-            android:padding="@dimen/db_handler_btn_padding_h"/>
+            android:padding="@dimen/db_handler_btn_padding_h"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"

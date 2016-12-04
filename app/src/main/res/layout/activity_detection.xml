@@ -40,22 +40,61 @@
             android:layout_margin="@dimen/db_handler_btn_padding_h"
             android:background="@color/colorLightGrey" >
 
-            <TextView
-                android:text="A - 1"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/locationText"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-                android:textStyle="normal|bold"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentStart="false"
-                android:layout_centerHorizontal="false"
-                android:layout_centerVertical="false"
-                android:layout_centerInParent="false"
-                android:gravity="center_vertical|center_horizontal"
-                android:background="@color/colorWhite"
-                tools:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp" />
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:text="Block"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView5"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:textSize="30sp"/>
+
+                        <TextView
+                            android:text="Floor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView4"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:textSize="30sp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="A - 1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/locationText"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+                        android:textStyle="normal|bold"
+                        android:textSize="150sp"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentStart="false"
+                        android:layout_centerHorizontal="false"
+                        android:layout_centerInParent="false"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:background="@color/colorWhite"
+                        tools:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_centerVertical="true" />
+                </LinearLayout>
+            </RelativeLayout>
+
         </RelativeLayout>
     </LinearLayout>
 
