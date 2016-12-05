@@ -6,5 +6,5 @@
     <dimen name="db_handler_btn_padding_h">8dp</dimen>
     <dimen name="activity_no_padding">0dp</dimen>
     <dimen name="main_vertical_margin">16dp</dimen>
-    <dimen name="home_btn_text_size">18sp</dimen>
+    <dimen name="home_btn_text_size">14sp</dimen>
 </resources>

@@ -76,4 +76,22 @@ public class MeasurementDAO extends  AbstractDAO<Measurement> {
         cursor.close();
         return result;
     }
+
+    public List<Measurement> findMeasurementsForLoc(Location loc){
+        String rawQuery = "SELECT * FROM " + getDatabaseHelper().MEASUREMENT_TABLE + " INNER JOIN " + getDatabaseHelper().LOCATION_TABLE + " ON " + getDatabaseHelper().MEASUREMENT_TABLE + "." + Measurement.Field.BLOCK_ID + " = " + getDatabaseHelper().LOCATION_TABLE + "." + Location.Field.ID + " WHERE " + getDatabaseHelper().LOCATION_TABLE + "."+Location.Field.BLOCK + " = ? AND " + getDatabaseHelper().LOCATION_TABLE + "."+Location.Field.FLOOR + " = ? AND " + getDatabaseHelper().MEASUREMENT_TABLE + "."+Measurement.Field.LEVEL + " < ?";
+        Cursor c = getDatabase().rawQuery(rawQuery, new String[]{loc.getBlock().toString(),loc.getFloor().toString(),String.valueOf("-85")} );
+        c.moveToFirst();
+        List<Measurement> result=getEntityFromCursor(c);
+        c.close();
+        return result;
+    }
+
+    public List<Measurement> findMeasurementsForBlockAndWifi(Location loc,Wifi wifi){
+        String rawQuery = "SELECT * FROM " + getDatabaseHelper().MEASUREMENT_TABLE + " INNER JOIN " + getDatabaseHelper().LOCATION_TABLE + " ON " + getDatabaseHelper().MEASUREMENT_TABLE + "." + Measurement.Field.BLOCK_ID + " = " + getDatabaseHelper().LOCATION_TABLE + "." + Location.Field.ID + " WHERE " + getDatabaseHelper().LOCATION_TABLE + "."+Location.Field.BLOCK + " = ? AND " +getDatabaseHelper().MEASUREMENT_TABLE + "."+Measurement.Field.WIFI_ID + " = ?" ;
+        Cursor c = getDatabase().rawQuery(rawQuery, new String[]{loc.getBlock().toString(),wifi.getId().toString()} );
+        c.moveToFirst();
+        List<Measurement> result=getEntityFromCursor(c);
+        c.close();
+        return result;
+    }
 }

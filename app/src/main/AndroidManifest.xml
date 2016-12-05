@@ -38,6 +38,10 @@
             android:name=".android.activity.DetectionActivity"
             android:screenOrientation="portrait"
             android:label="Where Am I ?"/>
+        <activity
+            android:name=".android.activity.NavigationActivity"
+            android:screenOrientation="portrait"
+            android:label="Navigation"/>
     </application>
 
 </manifest>

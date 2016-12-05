@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 public class PermissionManager {
 
     public static final int PERMISSION_REQUEST_LOCATION = 1111;
+    public static final int PERMISSION_REQUEST_LOCATION2 = 1114;
     public static final int PERMISSION_REQUEST_STORAGE = 1112;
 
     public static final String[] PERMISSIONS_GROUP_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE,Manifest.permission.CHANGE_WIFI_STATE};

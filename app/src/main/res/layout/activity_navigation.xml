@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_detection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_no_padding"
+    android:paddingRight="@dimen/activity_no_padding"
+    android:paddingTop="@dimen/activity_no_padding"
+    tools:context="sk.stuba.fei.indoorlocator.android.activity.DetectionActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorLightGrey"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@color/colorPrimaryDark"
+            android:padding="@dimen/main_vertical_margin">
+
+            <TextView
+                android:text="Navigation"
+                android:id="@+id/location_info_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="50sp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorLightGrey" >
+
+            <View
+                android:id="@+id/centerShim3"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:visibility="invisible"
+                android:layout_centerHorizontal="true"/>
+
+
+            <TextView
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/centerShim3"
+                android:gravity="center_vertical"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:id="@+id/actual_location"
+                android:hint="Actual Location: "
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
+
+            <TextView
+                android:text="A - 1"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@+id/centerShim3"
+                android:id="@+id/locationText2"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:layout_marginLeft="2dp"
+                />
+
+            <TextView
+                android:layout_height="50dp"
+                android:layout_below="@+id/actual_location"
+                android:layout_width="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/centerShim3"
+                android:textSize="18sp"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack"
+                android:id="@+id/wanted_location"
+                android:hint="Wanted Location: "
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@+id/actual_location"
+                android:layout_toRightOf="@+id/centerShim3"
+                android:id="@+id/input_location"
+                android:hint="A - 102"
+                />
+
+            <Button
+                android:text="Start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/wanted_location"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/btn_navigation"
+                android:background="@color/colorPrimaryDark"
+                android:clickable="true"
+                android:onClick="startNavigation"/>
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_below="@+id/btn_navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorLightGrey"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_refresh_white_48dp"
+        android:clickable="true"
+        app:rippleColor="@color/colorWhite"
+        app:backgroundTint="@color/colorPrimaryDark"
+        android:elevation="6dp"
+        android:layout_margin="26dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="startDetection" />
+
+</RelativeLayout>

@@ -65,4 +65,27 @@ public class Location extends AbstractEntity{
     public void setLastScan(String lastScan) {
         this.lastScan = lastScan;
     }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        boolean sameSame = false;
+        if (object != null && object instanceof Location)
+        {
+            if(this.getBlock() == ((Location) object).getBlock() && this.getFloor()== ((Location) object).getFloor()){
+                sameSame= true;
+            }
+        }
+
+        return sameSame;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = 17;
+        result = 31 * result + (this.getFloor() == null ? 0 : this.getFloor().hashCode());
+
+        return result;
+    }
 }

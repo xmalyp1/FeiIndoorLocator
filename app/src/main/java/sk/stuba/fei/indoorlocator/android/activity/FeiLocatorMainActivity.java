@@ -66,6 +66,19 @@ public class FeiLocatorMainActivity extends Activity {
                 }
             }
         });
+
+        Button navigation=(Button)this.findViewById(R.id.btn_open_navigation_process);
+        navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(PermissionManager.hasPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION)) {
+                    Intent myIntent = new Intent(FeiLocatorMainActivity.this, NavigationActivity.class);
+                    FeiLocatorMainActivity.this.startActivity(myIntent);
+                } else {
+                    ActivityCompat.requestPermissions(FeiLocatorMainActivity.this, PermissionManager.PERMISSIONS_GROUP_LOCATION, PermissionManager.PERMISSION_REQUEST_LOCATION2);
+                }
+            }
+        });
     }
 
     public void showPopup(View v) {
@@ -158,6 +171,13 @@ public class FeiLocatorMainActivity extends Activity {
         } else if(requestCode == PermissionManager.PERMISSION_REQUEST_STORAGE) {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 importDB();
+            } else {
+                Toast.makeText(FeiLocatorMainActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
+            }
+        } else if(requestCode == PermissionManager.PERMISSION_REQUEST_LOCATION2) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent myIntent = new Intent(FeiLocatorMainActivity.this, NavigationActivity.class);
+                FeiLocatorMainActivity.this.startActivity(myIntent);
             } else {
                 Toast.makeText(FeiLocatorMainActivity.this,"You do not have needed permissions.", Toast.LENGTH_SHORT).show();
             }
